@@ -1,3 +1,10 @@
+# Vim ancillary files
+*~
+*.swp
+
+# Build directory
+build/**
+
 # Prerequisites
 *.d
 
