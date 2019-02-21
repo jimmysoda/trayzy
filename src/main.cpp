@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <trayzy/Vec3.h>
+#include <trayzy/Ray.h>
 
 int main(int argc, char **argv)
 {
@@ -8,6 +9,9 @@ int main(int argc, char **argv)
 	int nRows = 100;
 	int maxValue = 255;
 	std::FILE *out = stdout;
+
+	trayzy::Ray<float> ray(trayzy::Vec3<float>(), trayzy::Vec3<float>(1, 1, 1));
+	trayzy::Vec3<float> pointAtT2 = ray.pointAtParameter(2);
 
 	std::fprintf(out, "P3\n%d %d\n%d\n", nCols, nRows, maxValue);
 
