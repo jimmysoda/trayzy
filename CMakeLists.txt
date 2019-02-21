@@ -12,7 +12,10 @@ set(TARGET ${CMAKE_PROJECT_NAME}-app)
 set(SOURCES src/main.cpp)
 set(HEADERS
 	include/trayzy/Forward.h
+	include/trayzy/Hittable.h
+	include/trayzy/HittableList.h
 	include/trayzy/Ray.h
+	include/trayzy/Sphere.h
 	include/trayzy/Vec3.h
 )
 

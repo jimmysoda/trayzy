@@ -11,69 +11,115 @@
 
 namespace trayzy
 {
+	/**
+	 * A three-dimensional vector.
+	 * 
+	 * @tparam T The coordinate data type
+	 */
 	template<typename T>
 	class Vec3 : public std::array<T, 3>
 	{
 	public:
+		/**
+		 * Creates a new three-dimensional vector.
+		 * 
+		 * @param a The first coordinate value
+		 * @param b The second coordinate value
+		 * @param c The third coordinate value
+		 */
 		Vec3(T a = T(), T b = T(), T c = T()) :
 			std::array<T, 3>{a, b, c}
 		{
 			// Do nothing more
 		}
 
+		/// Returns this three-dimensional vector.
 		inline Vec3<T> &operator+() const;
+
+		/// Returns a negated copy of this three-dimensional vector.
 		inline Vec3<T> operator-() const;
+
+		/// Performs an element-wise sum with another vector.
 		inline Vec3<T> &operator+=(const Vec3<T> &v);
+
+		/// Performs an element-wise subtraction with another vector.
 		inline Vec3<T> &operator-=(const Vec3<T> &v);
+
+		/// Performs an element-wise multiplication with another vector.
 		inline Vec3<T> &operator*=(const Vec3<T> &v);
+
+		/// Performs an element-wise division with another vector.
 		inline Vec3<T> &operator/=(const Vec3<T> &v);
+
+		/// Performs an element-wise multiplication with a scalar value.
 		inline Vec3<T> &operator*=(const T &t);
+
+		/// Performs an element-wise division with a scalar value.
 		inline Vec3<T> &operator/=(const T &t);
 
+		/// Computes the squared magnitude of this vector.
 		inline T magnitudeSquared() const;
+
+		/// Computes the magnitude of this vector.
 		inline T magnitude() const;
+
+		/// Normalizes this vector into a unit vector.
 		inline Vec3<T> &normalize();
 	};
 
+	/// Reads the contents of a vector from an input stream
 	template<typename T>
 	inline std::istream &operator>>(std::istream &is, Vec3<T> &v);
 
+	/// Writes the contents of a vector to an input stream
 	template<typename T>
 	inline std::ostream &operator<<(std::ostream &os, const Vec3<T> &v);
 
+	/// Computes the element-wise sum between two vectors.
 	template<typename T>
 	inline Vec3<T> operator+(const Vec3<T> &v1, const Vec3<T> &v2);
 
+	/// Computes the element-wise difference between two vectors.
 	template<typename T>
 	inline Vec3<T> operator-(const Vec3<T> &v1, const Vec3<T> &v2);
 
+	/// Computes the element-wise product between two vectors.
 	template<typename T>
 	inline Vec3<T> operator*(const Vec3<T> &v1, const Vec3<T> &v2);
 
+	/// Computes the element-wise quotient between two vectors.
 	template<typename T>
 	inline Vec3<T> operator/(const Vec3<T> &v1, const Vec3<T> &v2);
 
+	/// Computes the element-wise sum between a vector and a scalar.
 	template<typename T>
 	inline Vec3<T> operator+(const Vec3<T> &v, const T &t);
 
+	/// Computes the element-wise difference between a vector and a scalar.
 	template<typename T>
 	inline Vec3<T> operator-(const Vec3<T> &v, const T &t);
 
+	/// Computes the element-wise product between a vector and a scalar.
 	template<typename T>
 	inline Vec3<T> operator*(const Vec3<T> &v, const T &t);
 
+	/// Computes the element-wise quotient between a vector and a scalar.
 	template<typename T>
 	inline Vec3<T> operator/(const Vec3<T> &v, const T &t);
 
+	/// Computes the element-wise product between a scalar and a vector.
 	template<typename T>
 	inline Vec3<T> operator*(const T &t, const Vec3<T> &v);
 
+	/// Computes the dot product between two vectors.
 	template<typename T>
 	inline T dot(const Vec3<T> &v1, const Vec3<T> &v2);
 
+	/// Computes the cross product between two vectors.
 	template<typename T>
 	inline Vec3<T> cross(const Vec3<T> &v1, const Vec3<T> &v2);
 
+	/// Computes unit vector equivalent of a vector.
 	template<typename T>
 	inline Vec3<T> unitVector(const Vec3<T> &v);
 }
