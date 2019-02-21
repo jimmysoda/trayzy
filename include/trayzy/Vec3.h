@@ -174,14 +174,14 @@ namespace trayzy
 	template<typename T>
 	Vec3<T> &Vec3<T>::operator*=(const T &t)
 	{
-		std::transform(this->cbegin(), this->cend(), t->begin(), std::bind(std::multiplies<T>(), std::placeholders::_1, t));
+		std::transform(this->cbegin(), this->cend(), this->begin(), std::bind(std::multiplies<T>(), std::placeholders::_1, t));
 		return *this;
 	}
 
 	template<typename T>
 	Vec3<T> &Vec3<T>::operator/=(const T &t)
 	{
-		std::transform(this->cbegin(), this->cend(), t->begin(), std::bind(std::divides<T>(), std::placeholders::_1, t));
+		std::transform(this->cbegin(), this->cend(), this->begin(), std::bind(std::divides<T>(), std::placeholders::_1, t));
 		return *this;
 	}
 
