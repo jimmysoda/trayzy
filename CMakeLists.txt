@@ -4,6 +4,10 @@ project(trayzy CXX)
 
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "CMake debug suffix")
 
+include_directories(
+	include
+)
+
 add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
 
 install(
