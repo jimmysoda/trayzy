@@ -1,40 +1,28 @@
+#include <cfloat>
 #include <iostream>
-#include <trayzy/Vec3.h>
-#include <trayzy/Ray.h>
+#include <memory>
 
+#include <trayzy/HittableList.h>
+#include <trayzy/Ray.h>
+#include <trayzy/Sphere.h>
+#include <trayzy/Vec3.h>
+
+using HittableListf = trayzy::HittableList<float>;
+using Rayf = trayzy::Ray<float>;
+using Spheref = trayzy::Sphere<float>;
 using Vec3f = trayzy::Vec3<float>;
 using Vec3i = trayzy::Vec3<int>;
-using Rayf = trayzy::Ray<float>;
 
 template<typename T>
-T hitSphere(const trayzy::Vec3<T> center, T radius, const trayzy::Ray<T> &ray)
-{
-	trayzy::Vec3<T> oc = ray.origin() - center;
-
-	// Note that the magnitude squared of a vector is equal to the dot product with itself
-	T a = ray.direction().magnitudeSquared();
-	T b = 2 * dot(oc, ray.direction());
-	T c = oc.magnitudeSquared() - radius * radius;
-
-	// Return the parametric location of the hit, or -1 if none
-	T discriminant = b * b - 4 * a * c;
-	return (discriminant < 0) ? T(-1) : (-b - std::sqrt(discriminant)) / (2 * a);
-}
-
-template<typename T>
-trayzy::Vec3<T> color(const trayzy::Ray<T> &ray)
+trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &world)
 {
 	trayzy::Vec3<T> c;
 	trayzy::Vec3<T> white(1, 1, 1);
-	trayzy::Vec3<T> sphereCenter(0, 0, -1);
-	T sphereRadius(0.5);
-	T t = hitSphere(sphereCenter, sphereRadius, ray);
+	trayzy::HitRecord<T> record;
 
-	if (t > T(0))
+	if (world.hit(ray, T(0), T(FLT_MAX), record))
 	{
-		trayzy::Vec3<T> hit = ray.pointAtParameter(t);
-		trayzy::Vec3<T> normal = trayzy::unitVector(hit - sphereCenter);
-		c = T(0.5) * (normal + white);
+		c = T(0.5) * (record.normal + white);
 	}
 	else
 	{
@@ -65,6 +53,10 @@ int main(int argc, char **argv)
 	Vec3f vertical(0.0f, 2.0f, 0.0f);
 	Vec3f origin(0.0f, 0.0f, 0.0f);
 
+	HittableListf world;
+	world.insert(std::make_shared<Spheref>(Vec3f(0, 0, -1), 0.5));
+	world.insert(std::make_shared<Spheref>(Vec3f(0, -100.5, -1), 100));
+
 	for (int row = nRows - 1; row >= 0; --row)
 	{
 		float v = float(row) / nRows;
@@ -74,9 +66,9 @@ int main(int argc, char **argv)
 		{
 			float u = float(col) / nCols;
 			Vec3f horizontalOffset = u * horizontal;
-			Rayf r(origin, lowerLeft + horizontalOffset + verticalOffset);
+			Rayf ray(origin, lowerLeft + horizontalOffset + verticalOffset);
 
-			Vec3f fColor = color(r);
+			Vec3f fColor = color(ray, world);
 			Vec3i iColor(
 				int(fColor[trayzy::R] * maxValue),
 				int(fColor[trayzy::G] * maxValue),
