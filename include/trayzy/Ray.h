@@ -5,19 +5,40 @@
 
 namespace trayzy
 {
+	/**
+	 * A direction bounded by a starting location.
+	 * 
+	 * @tparam T The coordinate data type
+	 */
 	template <typename T>
 	class Ray
 	{
 	public:
-		Ray(const Vec3<T> &origin, const Vec3<T> &direction) :
+		/**
+		 * Creates a new ray.
+		 * 
+		 * @param origin The starting location
+		 * @param direction The outgoing direction
+		 */
+		Ray(const Vec3<T> &origin = Vec3<T>(), const Vec3<T> &direction = Vec3<T>) :
 			mDirection(direction),
 			mOrigin(origin)
 		{
 			// Do nothing more
 		}
 
+		/// Returns the ray's origin
 		inline const Vec3<T> &origin() const;
+
+		/// Returns the ray's dimension
 		inline const Vec3<T> &direction() const;
+
+		/** 
+		 * Returns the point at the provided parametric coordinate.
+		 * 
+		 * @param t The parametric coordinate
+		 * @return The point at the parametric coordinate
+		 */
 		inline Vec3<T> pointAtParameter(T t) const;
 
 	private:
