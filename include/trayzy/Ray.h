@@ -16,8 +16,8 @@ namespace trayzy
 			// Do nothing more
 		}
 
-		inline Vec3<T> &origin() const;
-		inline Vec3<T> &direction() const;
+		inline const Vec3<T> &origin() const;
+		inline const Vec3<T> &direction() const;
 		inline Vec3<T> pointAtParameter(T t) const;
 
 	private:
@@ -30,13 +30,13 @@ namespace trayzy
 namespace trayzy
 {
 	template <typename T>
-	Vec3<T> &Ray<T>::origin() const
+	const Vec3<T> &Ray<T>::origin() const
 	{
 		return mOrigin;
 	}
 
 	template <typename T>
-	Vec3<T> &Ray<T>::direction() const
+	const Vec3<T> &Ray<T>::direction() const
 	{
 		return mDirection;
 	}
