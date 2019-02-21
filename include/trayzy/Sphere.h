@@ -19,6 +19,7 @@ namespace trayzy
 			// Do nothing more
 		}
 
+		// Hittable::hit
 		virtual bool hit(const Ray<T> &ray, T tMin, T tMax, HitRecord<T> &record) const override;
 
 	private:

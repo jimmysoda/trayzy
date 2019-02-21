@@ -8,26 +8,52 @@
 
 namespace trayzy
 {
+	/**
+	 * A list of pointers to hittable items.
+	 * 
+	 * @tparam T The coordinate data type
+	 */
 	template<typename T>
 	class HittableList : public Hittable<T>
 	{
 	public:
+		/// Creates an empty hittable list
 		HittableList() = default;
 
+		/**
+		 * Creates a hittable list by copying the provided collection of pointers to hittable items.
+		 * 
+		 * @param hittables The collection of pointers to hittable items
+		 */
 		HittableList(const std::vector<std::shared_ptr<Hittable<T>>> &hittables) :
 			mHittables(hittables)
 		{
 			// Do nothing more
 		}
 
+		/**
+		 * Creates a hittable list by moving the provided collection of pointers to hittable items.
+		 * 
+		 * @param hittables The collection of pointers to hittable items
+		 */
 		HittableList(std::vector<std::shared_ptr<Hittable<T>>> &&hittables) :
 			mHittables(std::move(hittables))
 		{
 			// Do nothing more
 		}
 
+		/**
+		 * Inserts a pointer to a hittable item to this list.
+		 * 
+		 * @param hittable The pointer to the hittable item
+		 */
 		void insert(std::shared_ptr<Hittable<T>> hittable);
 
+		/**
+		 * @copydoc Hittable::hit
+		 * 
+		 * The recorded hit will be for the closest item in the list.
+		 */
 		virtual bool hit(const Ray<T> &ray, T tMin, T tMax, HitRecord<T> &record) const override;
 
 	private:
