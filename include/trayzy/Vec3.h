@@ -174,7 +174,7 @@ namespace trayzy
 	std::ostream &operator<<(std::ostream &os, const Vec3<T> &v)
 	{
 		auto itr = v.cbegin();
-		os << itr++;
+		os << *itr++;
 
 		for (; itr != v.cend(); ++itr)
 		{

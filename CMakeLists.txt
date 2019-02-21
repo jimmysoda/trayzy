@@ -8,10 +8,18 @@ include_directories(
 	include
 )
 
-add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
+set(TARGET ${CMAKE_PROJECT_NAME}-app)
+set(SOURCES src/main.cpp)
+set(HEADERS
+	include/trayzy/Forward.h
+	include/trayzy/Ray.h
+	include/trayzy/Vec3.h
+)
+
+add_executable(${TARGET} ${SOURCES} ${HEADERS})
 
 install(
-	TARGETS ${CMAKE_PROJECT_NAME}
+	TARGETS ${TARGET}
 	DESTINATION ${CMAKE_BINARY_DIR}/bin
 )
 
