@@ -7,7 +7,7 @@ using Vec3i = trayzy::Vec3<int>;
 using Rayf = trayzy::Ray<float>;
 
 template<typename T>
-bool hitSphere(const trayzy::Vec3<T> center, T radius, const trayzy::Ray<T> &ray)
+T hitSphere(const trayzy::Vec3<T> center, T radius, const trayzy::Ray<T> &ray)
 {
 	trayzy::Vec3<T> oc = ray.origin() - center;
 
@@ -15,20 +15,26 @@ bool hitSphere(const trayzy::Vec3<T> center, T radius, const trayzy::Ray<T> &ray
 	T a = ray.direction().magnitudeSquared();
 	T b = 2 * dot(oc, ray.direction());
 	T c = oc.magnitudeSquared() - radius * radius;
-	return (b * b - 4 * a * c > 0);
+
+	// Return the parametric location of the hit, or -1 if none
+	T discriminant = b * b - 4 * a * c;
+	return (discriminant < 0) ? T(-1) : (-b - std::sqrt(discriminant)) / (2 * a);
 }
 
 template<typename T>
 trayzy::Vec3<T> color(const trayzy::Ray<T> &ray)
 {
 	trayzy::Vec3<T> c;
+	trayzy::Vec3<T> white(1, 1, 1);
 	trayzy::Vec3<T> sphereCenter(0, 0, -1);
 	T sphereRadius(0.5);
+	T t = hitSphere(sphereCenter, sphereRadius, ray);
 
-	if (hitSphere(sphereCenter, sphereRadius, ray))
+	if (t > T(0))
 	{
-		// Set the color to red if the sphere is hit
-		c = {1, 0, 0};
+		trayzy::Vec3<T> hit = ray.pointAtParameter(t);
+		trayzy::Vec3<T> normal = trayzy::unitVector(hit - sphereCenter);
+		c = T(0.5) * (normal + white);
 	}
 	else
 	{
@@ -36,7 +42,7 @@ trayzy::Vec3<T> color(const trayzy::Ray<T> &ray)
 		// from pure white to "Maya blue"
 		trayzy::Vec3<T> unitDirection = trayzy::unitVector(ray.direction());
 		T t = T(0.5) * (unitDirection[trayzy::Y] + T(1.0));
-		trayzy::Vec3<T> white(1, 1, 1);
+
 		trayzy::Vec3<T> mayaBlue(T(0.5), T(0.7), T(1.0));
 		c = (T(1.0) - t) * white + t * mayaBlue;
 	}
