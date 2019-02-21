@@ -1,12 +1,15 @@
 #include <cfloat>
 #include <iostream>
 #include <memory>
+#include <random>
 
+#include <trayzy/Camera.h>
 #include <trayzy/HittableList.h>
 #include <trayzy/Ray.h>
 #include <trayzy/Sphere.h>
 #include <trayzy/Vec3.h>
 
+using Cameraf = trayzy::Camera<float>;
 using HittableListf = trayzy::HittableList<float>;
 using Rayf = trayzy::Ray<float>;
 using Spheref = trayzy::Sphere<float>;
@@ -43,32 +46,37 @@ int main(int argc, char **argv)
 	// TODO Read column count, row count, max value, and output file from arguments
 	int nCols = 200;
 	int nRows = 100;
+	int nSamples = 100;
 	int maxValue = 255;
 	std::ostream &out = std::cout;
 
 	out << "P3" << std::endl << nCols << " " << nRows << std::endl << maxValue << std::endl;
 
-	Vec3f lowerLeft(-2.0f, -1.0f, -1.0f);
-	Vec3f horizontal(4.0f, 0.0f, 0.0f);
-	Vec3f vertical(0.0f, 2.0f, 0.0f);
-	Vec3f origin(0.0f, 0.0f, 0.0f);
-
 	HittableListf world;
-	world.insert(std::make_shared<Spheref>(Vec3f(0, 0, -1), 0.5));
-	world.insert(std::make_shared<Spheref>(Vec3f(0, -100.5, -1), 100));
+	world.insert(std::make_shared<Spheref>(Vec3f(0.0f, 0.0f, -1.0f), 0.5f));
+	world.insert(std::make_shared<Spheref>(Vec3f(0.0f, -100.5f, -1.0f), 100.0f));
+	Cameraf cam;
 
-	for (int row = nRows - 1; row >= 0; --row)
+	std::random_device rd;
+	std::default_random_engine engine(rd());
+	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+	for (int j = nRows - 1; j >= 0; --j)
 	{
-		float v = float(row) / nRows;
-		Vec3f verticalOffset = v * vertical;
-
-		for (int col = 0; col < nCols; ++col)
+		for (int i = 0; i < nCols; ++i)
 		{
-			float u = float(col) / nCols;
-			Vec3f horizontalOffset = u * horizontal;
-			Rayf ray(origin, lowerLeft + horizontalOffset + verticalOffset);
+			Vec3f fColor;
 
-			Vec3f fColor = color(ray, world);
+			for (int s = 0; s < nSamples; ++s)
+			{
+				float u = (i + distribution(engine)) / nCols;
+				float v = (j + distribution(engine)) / nRows;
+				Rayf ray = cam.getRay(u, v);
+				fColor += color(ray, world);
+			}
+
+			fColor /= float(nSamples);
+
 			Vec3i iColor(
 				int(fColor[trayzy::R] * maxValue),
 				int(fColor[trayzy::G] * maxValue),
