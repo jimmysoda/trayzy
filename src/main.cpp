@@ -7,15 +7,41 @@ using Vec3i = trayzy::Vec3<int>;
 using Rayf = trayzy::Ray<float>;
 
 template<typename T>
-trayzy::Vec3<T> color(const trayzy::Ray<T> &r)
+bool hitSphere(const trayzy::Vec3<T> center, T radius, const trayzy::Ray<T> &ray)
 {
-	// Perform a linear blend (a.k.a. linear interpolation or "lerp")
-	// from pure white to "Maya blue"
-	trayzy::Vec3<T> unitDirection = trayzy::unitVector(r.direction());
-	T t = T(0.5) * (unitDirection[trayzy::Y] + T(1.0));
-	trayzy::Vec3<T> white(1, 1, 1);
-	trayzy::Vec3<T> mayaBlue(T(0.5), T(0.7), T(1.0));
-	return (T(1.0) - t) * white + t * mayaBlue;
+	trayzy::Vec3<T> oc = ray.origin() - center;
+
+	// Note that the magnitude squared of a vector is equal to the dot product with itself
+	T a = ray.direction().magnitudeSquared();
+	T b = 2 * dot(oc, ray.direction());
+	T c = oc.magnitudeSquared() - radius * radius;
+	return (b * b - 4 * a * c > 0);
+}
+
+template<typename T>
+trayzy::Vec3<T> color(const trayzy::Ray<T> &ray)
+{
+	trayzy::Vec3<T> c;
+	trayzy::Vec3<T> sphereCenter(0, 0, -1);
+	T sphereRadius(0.5);
+
+	if (hitSphere(sphereCenter, sphereRadius, ray))
+	{
+		// Set the color to red if the sphere is hit
+		c = {1, 0, 0};
+	}
+	else
+	{
+		// Perform a linear blend (a.k.a. linear interpolation or "lerp")
+		// from pure white to "Maya blue"
+		trayzy::Vec3<T> unitDirection = trayzy::unitVector(ray.direction());
+		T t = T(0.5) * (unitDirection[trayzy::Y] + T(1.0));
+		trayzy::Vec3<T> white(1, 1, 1);
+		trayzy::Vec3<T> mayaBlue(T(0.5), T(0.7), T(1.0));
+		c = (T(1.0) - t) * white + t * mayaBlue;
+	}
+
+	return c;
 }
 
 int main(int argc, char **argv)
