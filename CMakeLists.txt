@@ -15,6 +15,10 @@ set(HEADERS
 	include/trayzy/Forward.h
 	include/trayzy/Hittable.h
 	include/trayzy/HittableList.h
+	include/trayzy/Intersection.h
+	include/trayzy/Lambertian.h
+	include/trayzy/Material.h
+	include/trayzy/Metal.h
 	include/trayzy/Ray.h
 	include/trayzy/Sphere.h
 	include/trayzy/Vec3.h

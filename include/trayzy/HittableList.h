@@ -2,6 +2,7 @@
 #define TRAYZY_HITTABLELIST_H
 
 #include "Hittable.h"
+#include "Intersection.h"
 
 #include <memory>
 #include <vector>
@@ -52,9 +53,9 @@ namespace trayzy
 		/**
 		 * @copydoc Hittable::hit
 		 * 
-		 * The recorded hit will be for the closest item in the list.
+		 * The intersection will set to the hit against the closest item in the list.
 		 */
-		virtual bool hit(const Ray<T> &ray, T tMin, T tMax, HitRecord<T> &record) const override;
+		virtual bool hit(const Ray<T> &ray, T tMin, T tMax, Intersection<T> &intersection) const override;
 
 	private:
 		std::vector<std::shared_ptr<Hittable<T>>> mHittables;
@@ -70,18 +71,18 @@ namespace trayzy
 	}
 
 	template<typename T>
-	bool HittableList<T>::hit(const Ray<T> &ray, T tMin, T tMax, HitRecord<T> &record) const
+	bool HittableList<T>::hit(const Ray<T> &ray, T tMin, T tMax, Intersection<T> &intersection) const
 	{
-		HitRecord<T> tempRecord;
+		Intersection<T> intermediateIntersection;
 		bool hitAnything = false;
 		T tClosest = tMax;
 
 		for (auto hittable : mHittables)
 		{
-			if (hittable->hit(ray, tMin, tClosest, tempRecord))
+			if (hittable->hit(ray, tMin, tClosest, intermediateIntersection))
 			{
-				record = tempRecord;
-				tClosest = record.t;
+				intersection = intermediateIntersection;
+				tClosest = intersection.t;
 				hitAnything = true;
 			}
 		}
