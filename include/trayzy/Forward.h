@@ -13,5 +13,20 @@ namespace trayzy
 	constexpr auto B = 2;
 }
 
+// Forward declarations
+namespace trayzy
+{
+	template<typename T> class Camera;
+	template<typename T> class Hittable;
+	template<typename T> class HittableList;
+	template<typename T> struct Intersection;
+	template<typename T> class Material;
+	template<typename T> class Ray;
+	template<typename T> class Sphere;
+	template<typename T> class Vec3;
+
+	using HittableListf = HittableList<float>;
+}
+
 #endif
 

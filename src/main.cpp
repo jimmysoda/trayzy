@@ -5,12 +5,16 @@
 
 #include <trayzy/Camera.h>
 #include <trayzy/HittableList.h>
+#include <trayzy/Lambertian.h>
+#include <trayzy/Metal.h>
 #include <trayzy/Ray.h>
 #include <trayzy/Sphere.h>
 #include <trayzy/Vec3.h>
 
 using Cameraf = trayzy::Camera<float>;
 using HittableListf = trayzy::HittableList<float>;
+using Lambertianf = trayzy::Lambertian<float>;
+using Metalf = trayzy::Metal<float>;
 using Rayf = trayzy::Ray<float>;
 using Spheref = trayzy::Sphere<float>;
 using Vec3f = trayzy::Vec3<float>;
@@ -21,31 +25,25 @@ std::default_random_engine engine(rd());
 std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
 template<typename T>
-trayzy::Vec3<T> randomInUnitSphere()
+trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &world, int depth)
 {
-	trayzy::Vec3<T> ijk(T(1.0), T(1.0), T(1.0));
-	trayzy::Vec3<T> p;
-
-	do
-	{
-		p = T(2.0) * trayzy::Vec3<T>(distribution(engine), distribution(engine), distribution(engine)) - ijk;
-	} while (p.magnitudeSquared() >= T(1.0));
-
-	return p;
-}
-
-template<typename T>
-trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &world)
-{
-	trayzy::Vec3<T> c;
+	trayzy::Vec3<T> c(0, 0, 0);
 	trayzy::Vec3<T> white(1, 1, 1);
-	trayzy::HitRecord<T> record;
-	T epsilon(0.001f);
+	trayzy::Intersection<T> intersection;
+	
+	int maxDepth = 50;
+	T hitEpsilon(0.001f);
 
-	if (world.hit(ray, epsilon, T(FLT_MAX), record))
+	if (world.hit(ray, hitEpsilon, T(FLT_MAX), intersection))
 	{
-		trayzy::Vec3<T> target = record.p + record.normal + randomInUnitSphere<T>();
-		c = T(0.5) * color(trayzy::Ray<T>(record.p, target - record.p), world);
+		trayzy::Ray<T> scattered;
+		trayzy::Vec3<T> attenuation;
+
+		if (depth < maxDepth && intersection.material &&
+			intersection.material->scatter(ray, intersection, attenuation, scattered))
+		{
+			c = attenuation * color(scattered, world, ++depth);
+		}
 	}
 	else
 	{
@@ -72,9 +70,24 @@ int main(int argc, char **argv)
 
 	out << "P3" << std::endl << nCols << " " << nRows << std::endl << maxValue << std::endl;
 
-	HittableListf world;
-	world.insert(std::make_shared<Spheref>(Vec3f(0.0f, 0.0f, -1.0f), 0.5f));
-	world.insert(std::make_shared<Spheref>(Vec3f(0.0f, -100.5f, -1.0f), 100.0f));
+	trayzy::HittableListf world;
+
+	world.insert(std::make_shared<Spheref>(
+		Vec3f(0.0f, 0.0f, -1.0f), 0.5f,
+		std::make_shared<Lambertianf>(Vec3f(0.8f, 0.3f, 0.3f))));
+
+	world.insert(std::make_shared<Spheref>(
+		Vec3f(0.0f, -100.5f, -1.0f), 100.0f,
+		std::make_shared<Lambertianf>(Vec3f(0.8f, 0.8f, 0.0f))));
+
+	world.insert(std::make_shared<Spheref>(
+		Vec3f(1.0f, 0.0f, -1.0f), 0.5f,
+		std::make_shared<Metalf>(Vec3f(0.8f, 0.6f, 0.2f))));
+
+	world.insert(std::make_shared<Spheref>(
+		Vec3f(-1.0f, 0.0f, -1.0f), 0.5f,
+		std::make_shared<Metalf>(Vec3f(0.8f, 0.8f, 0.8f))));
+
 	Cameraf cam;
 
 	for (int j = nRows - 1; j >= 0; --j)
@@ -88,7 +101,7 @@ int main(int argc, char **argv)
 				float u = (i + distribution(engine)) / nCols;
 				float v = (j + distribution(engine)) / nRows;
 				Rayf ray = cam.getRay(u, v);
-				fColor += color(ray, world);
+				fColor += color(ray, world, 0);
 			}
 
 			fColor /= float(nSamples);

@@ -14,13 +14,16 @@ namespace trayzy
 	class Ray
 	{
 	public:
+		/// Creates a new ray at the origin with zero direction.
+		Ray() = default;
+
 		/**
 		 * Creates a new ray.
 		 * 
 		 * @param origin The starting location
 		 * @param direction The outgoing direction
 		 */
-		Ray(const Vec3<T> &origin = Vec3<T>(), const Vec3<T> &direction = Vec3<T>) :
+		Ray(const Vec3<T> &origin, const Vec3<T> &direction) :
 			mDirection(direction),
 			mOrigin(origin)
 		{
