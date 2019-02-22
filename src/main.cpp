@@ -16,6 +16,24 @@ using Spheref = trayzy::Sphere<float>;
 using Vec3f = trayzy::Vec3<float>;
 using Vec3i = trayzy::Vec3<int>;
 
+std::random_device rd;
+std::default_random_engine engine(rd());
+std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+template<typename T>
+trayzy::Vec3<T> randomInUnitSphere()
+{
+	trayzy::Vec3<T> ijk(T(1.0), T(1.0), T(1.0));
+	trayzy::Vec3<T> p;
+
+	do
+	{
+		p = T(2.0) * trayzy::Vec3<T>(distribution(engine), distribution(engine), distribution(engine)) - ijk;
+	} while (p.magnitudeSquared() >= T(1.0));
+
+	return p;
+}
+
 template<typename T>
 trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &world)
 {
@@ -25,7 +43,8 @@ trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &
 
 	if (world.hit(ray, T(0), T(FLT_MAX), record))
 	{
-		c = T(0.5) * (record.normal + white);
+		trayzy::Vec3<T> target = record.p + record.normal + randomInUnitSphere<T>();
+		c = T(0.5) * color(trayzy::Ray<T>(record.p, target - record.p), world);
 	}
 	else
 	{
@@ -56,10 +75,6 @@ int main(int argc, char **argv)
 	world.insert(std::make_shared<Spheref>(Vec3f(0.0f, 0.0f, -1.0f), 0.5f));
 	world.insert(std::make_shared<Spheref>(Vec3f(0.0f, -100.5f, -1.0f), 100.0f));
 	Cameraf cam;
-
-	std::random_device rd;
-	std::default_random_engine engine(rd());
-	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 
 	for (int j = nRows - 1; j >= 0; --j)
 	{
