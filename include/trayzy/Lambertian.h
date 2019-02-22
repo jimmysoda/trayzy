@@ -6,8 +6,6 @@
 #include "Ray.h"
 #include "Vec3.h"
 
-#include <random>
-
 namespace trayzy
 {
 	/// A Lambertian material
@@ -27,10 +25,6 @@ namespace trayzy
 			Vec3<T> &attenuation, Ray<T> &scattered) const override;
 
 	private:
-		/// Returns a random vector within the unit sphere
-		static Vec3<T> randomInUnitSphere();
-
-	private:
 		Vec3<T> mAlbedo;
 	};
 }
@@ -45,25 +39,6 @@ namespace trayzy
 		scattered = Ray<T>(intersection.p, target - intersection.p);
 		attenuation = mAlbedo;
 		return true;
-	}
-
-	/* static */
-	template<typename T>
-	Vec3<T> Lambertian<T>::randomInUnitSphere()
-	{
-		std::random_device rd;
-		std::default_random_engine engine(rd());
-		std::uniform_real_distribution<T> distribution(T(0.0), T(1.0));
-
-		Vec3<T> ijk(T(1.0), T(1.0), T(1.0));
-		Vec3<T> p;
-
-		do
-		{
-			p = T(2.0) * Vec3<T>(distribution(engine), distribution(engine), distribution(engine)) - ijk;
-		} while (p.magnitudeSquared() >= T(1.0));
-
-		return p;
 	}
 }
 

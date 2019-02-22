@@ -11,10 +11,14 @@ namespace trayzy
 	{
 	public:
 		/// Creates a new metallic material
-		Metal(const Vec3<T> &albedo = Vec3<T>()) :
-			mAlbedo(albedo)
+		Metal(const Vec3<T> &albedo = Vec3<T>(), T fuzz = T(1)) :
+			mAlbedo(albedo),
+			mFuzz(fuzz)
 		{
-			// Do nothing more
+			if (mFuzz > T(1))
+			{
+				mFuzz = T(1);
+			}
 		}
 
 		// Material::scatter
@@ -27,6 +31,7 @@ namespace trayzy
 
 	private:
 		Vec3<T> mAlbedo;
+		T mFuzz;
 	};
 }
 
@@ -37,7 +42,7 @@ namespace trayzy
 		Vec3<T> &attenuation, Ray<T> &scattered) const
 	{
 		Vec3<T> reflected = reflect(unitVector(inbound.direction()), intersection.normal);
-		scattered = Ray<T>(intersection.p, reflected);
+		scattered = Ray<T>(intersection.p, reflected + mFuzz * randomInUnitSphere());
 		attenuation = mAlbedo;
 		return dot(scattered.direction(), intersection.normal) > 0;
 	}

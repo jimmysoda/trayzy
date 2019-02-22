@@ -82,11 +82,11 @@ int main(int argc, char **argv)
 
 	world.insert(std::make_shared<Spheref>(
 		Vec3f(1.0f, 0.0f, -1.0f), 0.5f,
-		std::make_shared<Metalf>(Vec3f(0.8f, 0.6f, 0.2f))));
+		std::make_shared<Metalf>(Vec3f(0.8f, 0.6f, 0.2f), 0.3f)));
 
 	world.insert(std::make_shared<Spheref>(
 		Vec3f(-1.0f, 0.0f, -1.0f), 0.5f,
-		std::make_shared<Metalf>(Vec3f(0.8f, 0.8f, 0.8f))));
+		std::make_shared<Metalf>(Vec3f(0.8f, 0.8f, 0.8f), 1.0f)));
 
 	Cameraf cam;
 
