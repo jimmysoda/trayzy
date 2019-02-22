@@ -40,8 +40,9 @@ trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &
 	trayzy::Vec3<T> c;
 	trayzy::Vec3<T> white(1, 1, 1);
 	trayzy::HitRecord<T> record;
+	T epsilon(0.001f);
 
-	if (world.hit(ray, T(0), T(FLT_MAX), record))
+	if (world.hit(ray, epsilon, T(FLT_MAX), record))
 	{
 		trayzy::Vec3<T> target = record.p + record.normal + randomInUnitSphere<T>();
 		c = T(0.5) * color(trayzy::Ray<T>(record.p, target - record.p), world);
@@ -91,6 +92,9 @@ int main(int argc, char **argv)
 			}
 
 			fColor /= float(nSamples);
+
+			// Use gamma 2, i.e., raise color to the power 1/gamma which is square root
+			fColor = Vec3f(std::sqrt(fColor[trayzy::R]), std::sqrt(fColor[trayzy::G]), std::sqrt(fColor[trayzy::B]));
 
 			Vec3i iColor(
 				int(fColor[trayzy::R] * maxValue),
