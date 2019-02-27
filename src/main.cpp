@@ -52,10 +52,10 @@ trayzy::Vec3<T> color(const trayzy::Ray<T> &ray, const trayzy::HittableList<T> &
 		// Perform a linear blend (a.k.a. linear interpolation or "lerp")
 		// from pure white to "Maya blue"
 		trayzy::Vec3<T> unitDirection = trayzy::unitVector(ray.direction());
-		T t = T(0.5) * (unitDirection[trayzy::Y] + T(1.0));
+		T t = T(0.5) * (unitDirection[trayzy::Y] + 1);
 
-		trayzy::Vec3<T> mayaBlue(T(0.5), T(0.7), T(1.0));
-		c = (T(1.0) - t) * white + t * mayaBlue;
+		trayzy::Vec3<T> mayaBlue(T(0.5), T(0.7), 1);
+		c = (1 - t) * white + t * mayaBlue;
 	}
 
 	return c;

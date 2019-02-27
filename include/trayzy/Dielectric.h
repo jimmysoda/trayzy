@@ -21,7 +21,7 @@ namespace trayzy
 		 * 
 		 * @param refractionIndex The refraction index (defaults to 1 for air)
 		 */
-		Dielectric(T refractionIndex = T(1)) :
+		Dielectric(T refractionIndex = 1) :
 			mRefractionIndex(refractionIndex)
 		{
 			// Do nothing more 
@@ -71,8 +71,8 @@ namespace trayzy
 		Vec3<T> nNormalized = unitVector(n);
 
 		T dt = dot(vNormalized, nNormalized);
-		T discriminant = T(1)- refractionRatio * refractionRatio * (T(1) - dt * dt);
-		bool isRefracted = discriminant > T(0);
+		T discriminant = 1 - refractionRatio * refractionRatio * (1 - dt * dt);
+		bool isRefracted = discriminant > 0;
 
 		if (isRefracted)
 		{
@@ -89,7 +89,7 @@ namespace trayzy
 	{
 		T r0 = (1 - refractionIndex) / (1 - refractionIndex);
 		r0 *= r0;
-		return r0 + (1 - r0)* std::pow(1 - cosine, 5);
+		return r0 + (1 - r0) * std::pow(1 - cosine, 5);
 	}
 
 	template<typename T>
@@ -106,7 +106,7 @@ namespace trayzy
 		// Attenuation is always 1 since a glass surface absorbs nothing.
 		attenuation = Vec3<T>(1, 1, 1);
 
-		if (dot(inbound.direction(), intersection.normal) > T(0))
+		if (dot(inbound.direction(), intersection.normal) > 0)
 		{
 			// Inward reflection
 			outwardNormal = -intersection.normal;
@@ -118,7 +118,7 @@ namespace trayzy
 		{
 			// Outward reflection
 			outwardNormal = intersection.normal;
-			refractionRatio = T(1.0) / mRefractionIndex;
+			refractionRatio = 1 / mRefractionIndex;
 			cosine = -dot(inbound.direction(), intersection.normal) / inbound.direction().magnitude();
 		}
 
@@ -130,7 +130,7 @@ namespace trayzy
 
 			std::random_device rd;
 			std::default_random_engine engine(rd());
-			std::uniform_real_distribution<T> distribution(T(0.0), T(1.0));
+			std::uniform_real_distribution<T> distribution(0, 1);
 
 			isReflected = (distribution(engine) < reflectionProbability);
 		}

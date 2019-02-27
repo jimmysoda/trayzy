@@ -11,13 +11,13 @@ namespace trayzy
 	{
 	public:
 		/// Creates a new metallic material
-		Metal(const Vec3<T> &albedo = Vec3<T>(), T fuzz = T(1)) :
+		Metal(const Vec3<T> &albedo = Vec3<T>(), T fuzz = 1) :
 			mAlbedo(albedo),
 			mFuzz(fuzz)
 		{
-			if (mFuzz > T(1))
+			if (mFuzz > 1)
 			{
-				mFuzz = T(1);
+				mFuzz = 1;
 			}
 		}
 

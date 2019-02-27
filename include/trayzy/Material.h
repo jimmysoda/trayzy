@@ -45,15 +45,15 @@ namespace trayzy
 	{
 		std::random_device rd;
 		std::default_random_engine engine(rd());
-		std::uniform_real_distribution<T> distribution(T(0.0), T(1.0));
+		std::uniform_real_distribution<T> distribution(0, 1);
 
-		Vec3<T> ijk(T(1.0), T(1.0), T(1.0));
+		Vec3<T> ijk(1, 1, 1);
 		Vec3<T> p;
 
 		do
 		{
-			p = T(2.0) * Vec3<T>(distribution(engine), distribution(engine), distribution(engine)) - ijk;
-		} while (p.magnitudeSquared() >= T(1.0));
+			p = T(2) * Vec3<T>(distribution(engine), distribution(engine), distribution(engine)) - ijk;
+		} while (p.magnitudeSquared() >= 1);
 
 		return p;
 	}
@@ -62,7 +62,7 @@ namespace trayzy
 	template<typename T>
 	Vec3<T> Material<T>::reflect(const Vec3<T> &v ,const Vec3<T> &n)
 	{
-		return v - T(2) * dot(v, n) * n;
+		return v - 2 * dot(v, n) * n;
 	}
 
 }

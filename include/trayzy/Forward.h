@@ -17,10 +17,13 @@ namespace trayzy
 namespace trayzy
 {
 	template<typename T> class Camera;
+	template<typename T> class Dielectric;
 	template<typename T> class Hittable;
 	template<typename T> class HittableList;
 	template<typename T> struct Intersection;
+	template<typename T> class Lambertian;
 	template<typename T> class Material;
+	template<typename T> class Metal;
 	template<typename T> class Ray;
 	template<typename T> class Sphere;
 	template<typename T> class Vec3;

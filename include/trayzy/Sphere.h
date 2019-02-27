@@ -50,7 +50,7 @@ namespace trayzy
 		T discriminant = b * b - 4 * a * c;
 		bool hasHit = false;
 
-		if (discriminant > T(0))
+		if (discriminant > 0)
 		{
 			T sqrtDiscriminant =  std::sqrt(discriminant);
 
