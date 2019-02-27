@@ -4,6 +4,7 @@
 #include <random>
 
 #include <trayzy/Camera.h>
+#include <trayzy/Dielectric.h>
 #include <trayzy/HittableList.h>
 #include <trayzy/Lambertian.h>
 #include <trayzy/Metal.h>
@@ -12,6 +13,7 @@
 #include <trayzy/Vec3.h>
 
 using Cameraf = trayzy::Camera<float>;
+using Dielectricf = trayzy::Dielectric<float>;
 using HittableListf = trayzy::HittableList<float>;
 using Lambertianf = trayzy::Lambertian<float>;
 using Metalf = trayzy::Metal<float>;
@@ -74,7 +76,7 @@ int main(int argc, char **argv)
 
 	world.insert(std::make_shared<Spheref>(
 		Vec3f(0.0f, 0.0f, -1.0f), 0.5f,
-		std::make_shared<Lambertianf>(Vec3f(0.8f, 0.3f, 0.3f))));
+		std::make_shared<Lambertianf>(Vec3f(0.1f, 0.2f, 0.5f))));
 
 	world.insert(std::make_shared<Spheref>(
 		Vec3f(0.0f, -100.5f, -1.0f), 100.0f,
@@ -85,8 +87,7 @@ int main(int argc, char **argv)
 		std::make_shared<Metalf>(Vec3f(0.8f, 0.6f, 0.2f), 0.3f)));
 
 	world.insert(std::make_shared<Spheref>(
-		Vec3f(-1.0f, 0.0f, -1.0f), 0.5f,
-		std::make_shared<Metalf>(Vec3f(0.8f, 0.8f, 0.8f), 1.0f)));
+		Vec3f(-1.0f, 0.0f, -1.0f), 0.5f, std::make_shared<Dielectricf>(1.5f)));
 
 	Cameraf cam;
 

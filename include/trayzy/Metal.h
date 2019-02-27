@@ -26,10 +26,6 @@ namespace trayzy
 			Vec3<T> &attenuation, Ray<T> &scattered) const override;
 
 	private:
-		/// Reflects a vector at a surface with the provided normal.
-		static Vec3<T> reflect(const Vec3<T> &v, const Vec3<T> &n);
-
-	private:
 		Vec3<T> mAlbedo;
 		T mFuzz;
 	};
@@ -42,16 +38,9 @@ namespace trayzy
 		Vec3<T> &attenuation, Ray<T> &scattered) const
 	{
 		Vec3<T> reflected = reflect(unitVector(inbound.direction()), intersection.normal);
-		scattered = Ray<T>(intersection.p, reflected + mFuzz * randomInUnitSphere());
+		scattered = Ray<T>(intersection.p, reflected + mFuzz * Material<T>::randomInUnitSphere());
 		attenuation = mAlbedo;
 		return dot(scattered.direction(), intersection.normal) > 0;
-	}
-
-	/* static */
-	template<typename T>
-	Vec3<T> Metal<T>::reflect(const Vec3<T> &v ,const Vec3<T> &n)
-	{
-		return v - T(2) * dot(v, n) * n;
 	}
 }
 

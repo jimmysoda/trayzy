@@ -30,6 +30,10 @@ namespace trayzy
 	protected:
 		/// Returns a random vector within the unit sphere
 		static Vec3<T> randomInUnitSphere();
+
+		/// Reflects a vector at a surface with the provided normal.
+		static Vec3<T> reflect(const Vec3<T> &v, const Vec3<T> &n);
+
 	};
 }
 
@@ -53,6 +57,14 @@ namespace trayzy
 
 		return p;
 	}
+
+	/* static */
+	template<typename T>
+	Vec3<T> Material<T>::reflect(const Vec3<T> &v ,const Vec3<T> &n)
+	{
+		return v - T(2) * dot(v, n) * n;
+	}
+
 }
 
 #endif
