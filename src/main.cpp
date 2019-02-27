@@ -86,8 +86,10 @@ int main(int argc, char **argv)
 		Vec3f(1.0f, 0.0f, -1.0f), 0.5f,
 		std::make_shared<Metalf>(Vec3f(0.8f, 0.6f, 0.2f), 0.3f)));
 
+	// Use a negative radius to point surface normals inward,
+	// creating a hollow glass sphere
 	world.insert(std::make_shared<Spheref>(
-		Vec3f(-1.0f, 0.0f, -1.0f), 0.5f, std::make_shared<Dielectricf>(1.5f)));
+		Vec3f(-1.0f, 0.0f, -1.0f), -0.45f, std::make_shared<Dielectricf>(1.5f)));
 
 	Cameraf cam;
 
