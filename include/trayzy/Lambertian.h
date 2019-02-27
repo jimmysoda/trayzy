@@ -35,7 +35,7 @@ namespace trayzy
 	bool Lambertian<T>::scatter(const Ray<T> &inbound, const Intersection<T> &intersection,
 		Vec3<T> &attenuation, Ray<T> &scattered) const
 	{
-		Vec3<T> target = intersection.p + intersection.normal + randomInUnitSphere();
+		Vec3<T> target = intersection.p + intersection.normal + Material<T>::randomInUnitSphere();
 		scattered = Ray<T>(intersection.p, target - intersection.p);
 		attenuation = mAlbedo;
 		return true;
