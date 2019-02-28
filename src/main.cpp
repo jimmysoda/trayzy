@@ -89,9 +89,17 @@ int main(int argc, char **argv)
 	// Use a negative radius to point surface normals inward,
 	// creating a hollow glass sphere
 	world.insert(std::make_shared<Spheref>(
+		Vec3f(-1.0f, 0.0f, -1.0f), 0.5f, std::make_shared<Dielectricf>(1.5f)));
+
+	world.insert(std::make_shared<Spheref>(
 		Vec3f(-1.0f, 0.0f, -1.0f), -0.45f, std::make_shared<Dielectricf>(1.5f)));
 
-	Cameraf cam;
+	Vec3f lookFrom(-2, 2, 1);
+	Vec3f lookAt(0, 0, -1);
+	Vec3f up(0, 1, 0);
+	float verticalFovDegrees = 90;
+	float aspectRatio = float(nCols) / nRows;
+	Cameraf cam(lookFrom, lookAt, up, verticalFovDegrees, aspectRatio);
 
 	for (int j = nRows - 1; j >= 0; --j)
 	{
