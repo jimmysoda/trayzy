@@ -1,6 +1,7 @@
 #ifndef TRAYZY_CAMERA_H
 #define TRAYZY_CAMERA_H
 
+#include "Forward.h"
 #include "Ray.h"
 
 namespace trayzy
@@ -13,7 +14,7 @@ namespace trayzy
 	{
 	public:
 		/**
-		 * Creates a new camera.
+		 * Creates a new camera with the provided camera characteristics.
 		 * 
 		 * @param origin The camera's origin
 		 * @param lowerLeft The location of the canvas's lower-left location
@@ -29,6 +30,34 @@ namespace trayzy
 		{
 			// Do nothing more
 		}
+
+		/**
+		 * Creates a new camera.
+		 *
+		 * @param lookFrom The camera location
+		 * @param lookAt The observed location
+		 * @param up The upward direction
+		 * @param verticalFovDegrees The vertical field of view in degrees
+		 * @param aspectRatio The ratio between the horizontal and vertical draw plane axis lengths
+		 */
+		Camera(const Vec3<T> &lookFrom, const Vec3<T> &lookAt, const Vec3<T> &up,
+			T verticalFovDegrees, T aspectRatio) :
+			mOrigin(lookFrom)
+		 {
+		 	// Convert the vertical field of view to radians
+			T theta = verticalFovDegrees * T(M_PI) / 180;
+			T halfHeight = std::tan(theta / 2);
+			T halfWidth = aspectRatio * halfHeight;
+
+			// Compute the horizontal and vertical axes of the draw plane
+			Vec3<T> w = unitVector(lookFrom - lookAt);
+			Vec3<T> u = unitVector(cross(up, w));
+			Vec3<T> v = cross(w, u);
+
+			mLowerLeft = mOrigin - halfWidth * u - halfHeight * v - w;
+			mHorizontal = 2 * halfWidth * u;
+			mVertical = 2 * halfHeight * v;
+		 }
 
 		/**
 		 * Returns a ray from this camera's origin to the provided canvas coordinates
